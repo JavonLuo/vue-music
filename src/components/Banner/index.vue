@@ -15,7 +15,7 @@
 
 <script>
 // 引入swiper模块
-import Swiper from 'swiper'
+import Swiper from "swiper";
 export default {
   props: {
     banners: { type: Array, default: [] }
@@ -25,8 +25,11 @@ export default {
       new Swiper(".swiper-container", {
         loop: true, // 循环模式选项
         pagination: {
-        el: '.swiper-pagination',
-    },
+          el: ".swiper-pagination"
+        },
+        autoplay: {
+          delay: 1000 //1秒切换一次
+        }
       });
     }
   },
@@ -52,5 +55,4 @@ export default {
     width: 100%;
   }
 }
-
 </style>
