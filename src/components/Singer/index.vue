@@ -10,7 +10,9 @@
             <h3>{{item.Findex=='hot'?'热门':item.Findex}}</h3>
             <ol>
               <!-- 歌手信息 -->
-              <li v-for="(sItem,sIndex) in item.list" :key="sIndex" >
+              <li v-for="(sItem,sIndex) in item.list" 
+              :key="sIndex" 
+              @click="goDetail(sItem.Fsinger_mid)">
                 <img v-lazy="sItem.avator" alt />
                 <span>{{sItem.Fsinger_name}}</span>
               </li>
@@ -33,6 +35,13 @@
       </ul>
     </div>
     </div>
+    <!-- 动画嵌套路由 -->
+    <transition
+    enter-active-class="animated slideInRight"
+    leave-active-class="animated slideOutRight"
+    >
+    <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -52,6 +61,11 @@ export default {
     };
   },
   methods: {
+    goDetail(Fsinger_mid){
+      // console.log(Fsinger_mid);
+      // 去往子路由歌曲歌手详情页
+      this.$router.push(`/singer/${Fsinger_mid}`)
+    },
     touchestart(e){
       // console.log('按下');
       // 设定距离屏幕顶部的位置时140
