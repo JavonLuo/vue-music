@@ -42,9 +42,10 @@ export default {
     ...mapMutations(['addSongList','changeCurrendIndex','changeScreen']),
     // 打开播放器
     openPlay(index){
-        console.log(1);
+        // console.log(1);
         // 点击歌的li显示播放器
        this.addSongList(this.list)
+       console.log(this.list);
         // 确定点击的是那首歌
        this.changeCurrendIndex(index)
         // 变大
@@ -111,15 +112,23 @@ export default {
     let { singermid } = this.$router.currentRoute.params;
     // console.log(singermid);
     let data = await getSongByMid(singermid);
+    console.log(data);
     let { result, mids } = this.filterData(data.data.list);
-    // console.log(data);
     // 通过接口 将mids 歌曲的媒体id 换成 音乐地址 之后将数据进行合并
     let { urls } = await getSongUrlByMid(mids);
+    // 装可播放的歌曲
+    let finalData = []
     for (let index = 0; index < result.length; index++) {
       result[index].audioUrl = urls[index];
+      if(urls[index]){
+        // 将不能播放的歌曲去除
+        finalData.push(result[index])
+      }
     }
+    // console.log(finalData);
     // console.log(result);
-    this.list = result;
+    this.list = finalData;
+    console.log(this.list);
     this.name = data.data.singer_name;
     this.avator = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${singermid}.jpg?max_age=2592000`;
     this.$nextTick(() => {
@@ -197,6 +206,8 @@ export default {
         h2 {
           height: 20px;
           font-size: @fs-s;
+          margin: 0;
+          line-height: 40px;
         }
         p {
           margin-top: 4px;

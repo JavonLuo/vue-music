@@ -11,21 +11,13 @@ module.exports = {
         }
       },
       // 接口小暗号
-      '/getsongbymid': {
+      '/host': {
         target: 'http://47.95.207.1:3000', //要转发的目标网址目标网址 
         changeOrigin: true,
         pathRewrite: {
-          "^/getsongbymid": ''  //将路径中多余的暗号 删除
+          "^/host": ''  //将路径中多余的暗号 删除
         }
       },
-      // 接口小暗号
-      '/getsongurlbymid': {
-        target: 'http://47.95.207.1:3000', //要转发的目标网址目标网址 
-        changeOrigin: true,
-        pathRewrite: {
-          "^/getsongurlbymid": ''  //将路径中多余的暗号 删除
-        }
-      }
     }
   }
 

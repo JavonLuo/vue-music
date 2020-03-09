@@ -10,6 +10,10 @@ import store from './store/index'
 import router from './router/index'
 // 图片懒加载
 import VueLazyload from 'vue-lazyload'
+// 引入mui
+import './lib/mui/css/mui.css'
+import './lib/mui/js/mui.js'
+import './lib/mui/css/iconfont.css'
  
 Vue.use(VueLazyload)
  

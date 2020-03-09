@@ -33,15 +33,41 @@ let getSingersData = () => {
 
 // 获取歌手歌单
 let getSongByMid = (singermid) => {
-    let url = '/getsongbymid/fcj/music/songListById'
+    let url = '/host/fcj/music/songListById'
     return axios.post(url, { singermid })
 }
 
 // 根据mids 获取播放的url地址
 let getSongUrlByMid = (mids) => {
-    let url = 'getsongurlbymid/fcj/music/songurl'
+    let url = '/host/fcj/music/songurl'
     return axios.post(url, { mids })
 }
 
+// 根据mid获取歌词
+let getLyricByMid = (songmid)=>{
+    let url = '/host/fcj/music/lyric'
+    return axios.post(url,{songmid})
+}
 
-export { getBanner, getRecommend, getSingersData, getSongByMid, getSongUrlByMid }
+// 获取排行榜单
+let getRankList = ()=>{
+    let url = '/host/fcj/music/topRank'
+    return axios.get(url)
+}
+
+// 获取排行榜歌单
+let getRankSongList = (topid)=>{
+    let url = '/host/fcj/music/rankSongList'
+    return axios.post(url,{topid})
+}
+
+
+export { getBanner, 
+    getRecommend, 
+    getSingersData, 
+    getSongByMid, 
+    getSongUrlByMid,
+    getLyricByMid,
+    getRankList,
+    getRankSongList,
+}

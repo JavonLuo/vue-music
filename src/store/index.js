@@ -8,6 +8,7 @@ const store = new Vuex.Store({
         songList:[],//要放的歌曲列表
         fullScreen:true,//大小屏
         currentIndex:-1,//当前正在播放的哪首歌
+        loop:0,         //循环模式 0表示不循环 1单曲循环 2列表循环 3随机循环
     },
     mutations:{
         //控制大屏小屏切换
@@ -23,9 +24,33 @@ const store = new Vuex.Store({
             //修改当前正在播放那首歌
             state.currentIndex = index
         },
-        nextCurrendIndex(state){
             //下一首
-            state.cureentIndex++
+        nextCurrendIndex(state){
+            let count = state.songList.length
+            if(state.currentIndex<count-1){
+                state.currentIndex++
+            }else{
+                state.currentIndex = 0;
+            }
+            
+        },
+        // 上一首
+        prevCurrendIndex(state){
+            let count = state.songList.length
+            if(0<state.currentIndex){
+                state.currentIndex--
+            }else{
+                state.currentIndex = count-1;
+            }
+            
+        },
+        // 改变循环模式
+        changeloop(state){
+            if(state.loop===3){
+                state.loop = 0
+            }else{
+                state.loop++
+            }
         }
 
     },

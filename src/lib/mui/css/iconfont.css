@@ -1,0 +1,34 @@
+@font-face {font-family: "Muiicons";
+    font-weight: normal;
+    font-style: normal;
+        src:url('../fonts/iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    }
+    
+.mui-icon
+{
+    font-family: Muiicons;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+
+    display: inline-block;
+
+    text-decoration: none;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.icon-bofangqi3l:before {
+  content: "\e600";
+}
+
+.icon-bofangqi-zanting_:before {
+  content: "\e63a";
+}
+
+.icon-yinleliebiao:before {
+  content: "\e71e";
+}
+
