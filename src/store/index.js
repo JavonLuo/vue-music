@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         fullScreen:true,//大小屏
         currentIndex:-1,//当前正在播放的哪首歌
         loop:0,         //循环模式 0表示不循环 1单曲循环 2列表循环 3随机循环
+        closeList:false,  //播放列表
     },
     mutations:{
         //控制大屏小屏切换
@@ -34,6 +35,9 @@ const store = new Vuex.Store({
             }
             
         },
+        playList(state,params){
+            state.closeList = params
+        },
         // 上一首
         prevCurrendIndex(state){
             let count = state.songList.length
@@ -58,7 +62,7 @@ const store = new Vuex.Store({
         currentSong(state){
             // 当前放的哪一首歌
             return state.songList[state.currentIndex] || null;
-        }
+        },
     }
 })
 

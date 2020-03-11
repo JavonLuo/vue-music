@@ -2,7 +2,7 @@
   <div class="detail">
     <!-- 头部导航 -->
     <div class="top">
-      <span @click="back" class="back">◀</span>
+      <span @click="back" class="back mui-icon iconfont icon-fanhui"></span>
       <span class="singername">{{name}}</span>
     </div>
     <!-- 头像 -->
@@ -10,7 +10,7 @@
       <div class="shadow"></div>
     </div>
     <!-- 歌曲列表 -->
-    <div class="songlist" ref="wrapper">
+    <div :class="fullScreen?'songlist':'songlist afterPlay'" ref="wrapper">
       <div class="content">
         <ul>
           <li v-for="(item,index) in list" :key="index" @click="openPlay(index)">
@@ -25,7 +25,7 @@
 
 <script>
 // 引入vuex 
-import {mapMutations} from 'vuex'
+import {mapMutations,mapState} from 'vuex'
 // 引入Bs
 import BS from "better-scroll";
 // 根据mid发起请求方法
@@ -38,6 +38,9 @@ export default {
       avator: ""
     };
   },
+  computed:{
+    ...mapState(["fullScreen"]),
+  },
   methods: {
     ...mapMutations(['addSongList','changeCurrendIndex','changeScreen']),
     // 打开播放器
@@ -45,7 +48,7 @@ export default {
         // console.log(1);
         // 点击歌的li显示播放器
        this.addSongList(this.list)
-       console.log(this.list);
+      // console.log(this.list);
         // 确定点击的是那首歌
        this.changeCurrendIndex(index)
         // 变大
@@ -112,7 +115,7 @@ export default {
     let { singermid } = this.$router.currentRoute.params;
     // console.log(singermid);
     let data = await getSongByMid(singermid);
-    console.log(data);
+    // console.log(data);
     let { result, mids } = this.filterData(data.data.list);
     // 通过接口 将mids 歌曲的媒体id 换成 音乐地址 之后将数据进行合并
     let { urls } = await getSongUrlByMid(mids);
@@ -126,9 +129,8 @@ export default {
       }
     }
     // console.log(finalData);
-    // console.log(result);
     this.list = finalData;
-    console.log(this.list);
+    // console.log(this.list);
     this.name = data.data.singer_name;
     this.avator = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${singermid}.jpg?max_age=2592000`;
     this.$nextTick(() => {
@@ -156,9 +158,9 @@ export default {
     z-index: 5;
     .back {
       position: absolute;
-      top: 0;
-      left: 15px;
-      font-size: 30px;
+      top: 5px;
+      left: 10px;
+      font-size: 32px;
       color: @fs-color;
     }
     .singername {
@@ -190,7 +192,7 @@ export default {
   .songlist {
     position: fixed;
     background: @background;
-    top: 270px;
+    top: 262px;
     bottom: 0px;
     left: 0;
     right: 0;
@@ -203,19 +205,31 @@ export default {
         color: #fff;
         height: 60px;
         background: @background;
+        overflow: hidden;
         h2 {
           height: 20px;
           font-size: @fs-s;
           margin: 0;
-          line-height: 40px;
+          line-height: 20px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-weight: 400;
         }
         p {
           margin-top: 4px;
           height: 20px;
           color: rgba(255, 255, 255, 0.3);
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          line-height: 20px;
         }
       }
     }
   }
+  .afterPlay{
+  bottom: 60px;
+}
 }
 </style>

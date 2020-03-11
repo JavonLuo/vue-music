@@ -4,6 +4,12 @@
         src:url('../fonts/iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     }
     
+@font-face {font-family: "Muiicons";
+  font-weight: normal;
+  font-style: normal;
+      src:url('../fonts/iconfont1.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  }
+
 .mui-icon
 {
     font-family: Muiicons;
@@ -18,17 +24,54 @@
 
     -webkit-font-smoothing: antialiased;
 }
-
-
-.icon-bofangqi3l:before {
-  content: "\e600";
+.icon-xiayishou:before {
+  content: "\e606";
 }
 
-.icon-bofangqi-zanting_:before {
-  content: "\e63a";
+.icon-shangyishou:before {
+  content: "\e607";
 }
 
-.icon-yinleliebiao:before {
-  content: "\e71e";
+.icon-fanhui:before {
+  content: "\e675";
 }
 
+.icon-wei-:before {
+  content: "\e604";
+}
+
+.icon-danquxunhuan:before {
+  content: "\e66d";
+}
+
+.icon-ziyuan:before {
+  content: "\e636";
+}
+
+.icon-icon:before {
+  content: "\e656";
+}
+
+.icon-weibiaoti--:before {
+  content: "\e60f";
+}
+
+.icon-weibiaoti--1:before {
+  content: "\e611";
+}
+
+.icon-zuozuo-:before {
+  content: "\e641";
+}
+
+.icon-buxunhuanbofang-:before {
+  content: "\e639";
+}
+
+.icon-liebiaoxunhuan:before {
+  content: "\e630";
+}
+
+.icon-suijixunhuan:before {
+  content: "\e60e";
+}

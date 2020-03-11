@@ -14,9 +14,13 @@ import VueLazyload from 'vue-lazyload'
 import './lib/mui/css/mui.css'
 import './lib/mui/js/mui.js'
 import './lib/mui/css/iconfont.css'
- 
+// mit-ui
+import { Button, Cell,Toast,CellSwipe} from 'mint-ui'
+Vue.component(Button.name, Button)
+Vue.component(Cell.name, Cell)
+Vue.component(Toast.name,Toast)
+Vue.component(CellSwipe.name, CellSwipe);
 Vue.use(VueLazyload)
- 
 // or with options
 Vue.use(VueLazyload, {
   preLoad: 1.3,

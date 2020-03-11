@@ -146,6 +146,7 @@ export default {
         width: 40px;
         // background: red;
         text-align: center;
+        color:white;
         
     }
     .progress-bar{

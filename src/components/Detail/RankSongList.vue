@@ -2,22 +2,23 @@
   <div class="rankDetail">
     <!-- 头部导航 -->
     <div class="top">
-      <span @click="back" class="back">◀</span>
-      <h1 class="listname">{{songlist.ListName}}</h1>
+      <span @click="back" class="back mui-icon iconfont icon-fanhui"></span>
+      <h1 class="listname">{{listName}}</h1>
     </div>
     <!-- 背景图 -->
-    <div class="bcg" :style="{'background-image':`url(${songlist.picurl})`}" ref="img"></div>
+    <div class="bcg" :style="{'background-image':`url(${picUrl})`}" ref="img"></div>
     <!-- 歌曲列表 -->
-    <div class="songList-wrapper" ref="wrapper">
+    
+    <div :class="fullScreen?'songList-wrapper':'songList-wrapper afterPlay'" ref="wrapper">
       <div class="songlist-content">
         <ul>
-          <li v-for="(item,index) in songlist.songlist" :key="index" @click="openPlay(index)">
+          <li v-for="(item,index) in songlist" :key="index" @click="openPlay(index)">
               <div class="rank">
               <span class="index">{{index+1}}</span>
               </div>
               <div class="right_text">
               <h2>{{item.songname}}</h2>
-              <span>{{item.singername}}.{{item.albumname}}</span>
+              <span>{{item.singer[0].name}}.{{item.albumname}}</span>
               </div>
           </li>
         </ul>
@@ -28,7 +29,7 @@
 
 <script>
 // 过滤数据方法
-import filterData from "../Detail/filterRankSongList"
+// import filterData from "../Detail/filterRankSongList"
 // 获取数据
 import { getRankSongList } from "../../api/api"
 // 获取歌曲播放地址
@@ -36,25 +37,28 @@ import {getSongUrlByMid} from '../../api/api'
 // 滚动
 import BS from "better-scroll"
 // 引入vuex 
-import {mapMutations} from 'vuex'
+import {mapMutations,mapState} from 'vuex'
 export default {
   data() {
     return {
-      songlist: []
+      songlist:[],
+      listName:'',
+      picUrl:''
     };
+  },
+    computed:{
+    ...mapState(["fullScreen"]),
   },
   methods: {
     ...mapMutations(['addSongList','changeCurrendIndex','changeScreen']),
     // 打开播放器
     openPlay(index){
-        console.log(1);
         // 点击歌的li显示播放器
-        console.log(this.addSongList);
-       this.addSongList(this.songlist.songlist)
+       this.addSongList(this.songlist)
         // 确定点击的是那首歌
-      //  this.changeCurrendIndex(index)
+       this.changeCurrendIndex(index)
         // 变大
-      //  this.changeScreen(true)
+       this.changeScreen(true)
     },
     back() {
       this.$router.go(-1);
@@ -90,26 +94,53 @@ export default {
         }
       });
     },
+       // 处理请求回来的数据 传入list
+    handleData(songlist) {
+      let result = [];
+      let mids = [];
+      songlist.map((item, index) => {
+        // 解构音乐信息
+        let { albummid, albumname, singer, songmid, songname } = item.data;
+        let albumUrl = `https://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}.jpg?max_age=2592000`;
+        mids.push(songmid);
+        result.push({
+          albummid,
+          albumname,
+          singer,
+          songmid,
+          songname,
+          albumUrl
+        });
+      });
+      return { result, mids };
+    }
   },
   async created() {
-    // console.log(this.$router.currentRoute.params)
+    // 接受路由传参topid
     let topid = this.$router.currentRoute.params.topid
+    // 获取歌曲信息
     let res = await getRankSongList(topid)
-        // console.log(res);
-    let {rankSongList,mids} = filterData(res);
-     this.songlist = rankSongList
-    console.log(this.songlist);
+    // 列表名
+    this.listName = res.topinfo.ListName
+    // 列表图片
+    this.picUrl = res.topinfo.pic_v12
+    // 把数据添加到播放器---的数据
+    let {result,mids}  = this.handleData(res.songlist)
+    // 请求歌曲播放地址
     let urls = await getSongUrlByMid(mids)
-    // 过滤可用的urls
-    let avaUrls = []
-    for (let index = 0; index < urls.urls.length; index++) {
+    // console.log(urls);
+    // 过滤掉不可播放的歌曲
+    let finalData = []
+    for (let index = 0; index < result.length; index++) {
+      result[index].audioUrl = urls.urls[index];
       if(urls.urls[index]){
-        avaUrls.push(urls.urls[index])
-      };
-      
+        // 将不能播放的歌曲去除
+        finalData.push(result[index])
+      }
     }
-    console.log(avaUrls);
-      console.log(urls);
+    //  console.log(finalData);
+    this.songlist = finalData
+    // 初始化滚动
     this.$nextTick(()=>{
         this.initBs()
     });
@@ -136,9 +167,9 @@ export default {
     // background: chartreuse;
     .back {
       position: absolute;
-      top: 0;
-      left: 15px;
-      font-size: 30px;
+      top: 5px;
+      left: 10px;
+      font-size: 32px;
       color: @fs-color;
     }
     .listname {
@@ -161,7 +192,7 @@ export default {
     // background: chartreuse;
     position: fixed;
     top: 262px;
-    bottom: 60px;
+    bottom: 0px;
     // overflow: hidden;
 
     ul {
@@ -195,6 +226,8 @@ export default {
                   font-size: 16px;
                   font-weight: 400;
                   line-height: 25px;
+                  margin: 0;
+                  font-weight: 400;
               }
               span{
                   text-overflow:ellipsis;
@@ -208,5 +241,8 @@ export default {
       }
     }
   }
+  .afterPlay{
+  bottom: 60px;
+}
 }
 </style>

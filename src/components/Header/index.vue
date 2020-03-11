@@ -1,6 +1,6 @@
 <template>
   <div class="header" @click="flag=false">
-    <span class="mui-icon mui-icon-bars" @click.stop="flag=true"></span>
+    <span class="mui-icon mui-icon-bars" @click.stop="setting"></span>
     <!-- 如果图片在根目录下 可以直接用根目录路径 -->
     <img src="/logo.png" alt />
     <span>JaFeng Music</span>
@@ -16,18 +16,23 @@
 
 
 <script>
-import offcanvas from "../Offcanvas/index";
+// mint-ui
+import {Toast} from 'mint-ui'
+// import offcanvas from "../Offcanvas/index";
 export default {
-  components: { offcanvas },
+  // components: { offcanvas },
   data() {
     return {
       flag: false
     };
   },
   methods: {
-    open() {
-      // this.flag = !this.flag
-      // console.log(this.flag);
+    setting() {
+    Toast({
+        message: '功能正在开发中敬请期待...',
+        position: 'center',
+        duration: 1500
+      })
     },
     close() {}
   }

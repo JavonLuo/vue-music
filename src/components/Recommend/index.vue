@@ -1,14 +1,15 @@
 <template>
   <div class="recommend">
-    <div class="wrapper" ref="wrapper">
+    <div :class="fullScreen?'wrapper':'wrapper afterPlay'" ref="wrapper">
       <ul class="content">
         <!-- 轮播图 -->
         <banner :banners="bannerList">
-          <span>45</span>
         </banner>
         <!-- 热门歌单推荐 -->
         <div class="title">热门歌单推荐</div>
-        <li v-for="(item,index) in recommendList" :key="index" class="list">
+        <li v-for="(item,index) in recommendList" 
+        :key="index" class="list"
+        @click="openDetail">
           <div class="leftImg">
             <img v-lazy="item.imgurl" alt />
           </div>
@@ -24,7 +25,10 @@
 </template>
 
 <script>
-
+// mint-ui
+import {Toast} from 'mint-ui'
+// 控制小屏出现的时候 改变滚动的css样式
+import { mapState } from "vuex";
 // 引入banner图
 import banner from "../Banner/index";
 // 引入滑动库
@@ -33,15 +37,27 @@ import BS from "better-scroll";
 import { getBanner, getRecommend } from "../../api/api.js";
 import { get } from "http";
 export default {
+  methods:{
+    openDetail(){
+      Toast({
+    message: '数据加载失败...',
+    position: 'center',
+    duration: 1500
+  })
+    }
+  },
   components: { banner },
   data() {
     return {
       bannerList: [],
-      recommendList: []
+      recommendList: [],
     };
   },
+  computed:{
+    ...mapState(["fullScreen"]),
+  },
   mounted() {
-// 请求轮播同
+// 请求轮播图
     getBanner()
       .then(res => {
         this.bannerList = res.data.slider;
@@ -115,5 +131,8 @@ export default {
       }
     }
   }
+}
+.afterPlay{
+  bottom: 60px;
 }
 </style>

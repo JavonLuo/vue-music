@@ -61,6 +61,13 @@ let getRankSongList = (topid)=>{
     return axios.post(url,{topid})
 }
 
+// 搜索歌曲的获取
+    let getSearchSong = (kw)=>{
+        // let randNum = parseInt(Math.random()*100000)
+        let url = `/host/fcj/music/search?kw=${kw}`
+        return axios.get(url)
+    }
+
 
 export { getBanner, 
     getRecommend, 
@@ -70,4 +77,5 @@ export { getBanner,
     getLyricByMid,
     getRankList,
     getRankSongList,
+    getSearchSong
 }

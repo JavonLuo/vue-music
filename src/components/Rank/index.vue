@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="rankWrapper" ref="rankWrapper">
+    <div :class="fullScreen?'rankWrapper':'rankWrapper afterPlay'" ref="rankWrapper">
     <ul>
       <li v-for="(item,index) in rankList" :key="index" @click="goDetail(item.id)">
         <div class="img">
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+// 控制小屏出现的时候 改变滚动的css样式
+import { mapState } from "vuex";
 // 过滤数据方法
 import filterData from '../Detail/filterRankSongList'
 import {getRankList} from '../../api/api'
@@ -38,6 +40,9 @@ export default {
     return{
       rankList:[]
     }
+  },
+  computed:{
+    ...mapState(["fullScreen"]),
   },
   methods:{
     initBS(){
@@ -62,10 +67,6 @@ export default {
 
     })
   }
-
-
-
-
 };
 </script>
 
@@ -120,5 +121,8 @@ export default {
     }
     }
   }
+}
+.afterPlay{
+  bottom: 60px;
 }
 </style>

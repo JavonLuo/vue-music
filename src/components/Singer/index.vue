@@ -1,7 +1,7 @@
 <template>
   <div class="singers">
     <!-- 滚动的列表 -->
-    <div class="wrapper" ref="singerWrapper">
+    <div :class="fullScreen?'wrapper':'wrapper afterPlay'" ref="singerWrapper">
       <div class="content">
         <ul v-for="(item,index) in singers" :key="index">
           
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+// 控制小屏出现的时候 改变滚动的css样式
+import { mapState } from "vuex";
 // 引入接口
 import { getSingersData } from "../../api/api.js";
 // 引入数据处理方法
@@ -150,7 +152,9 @@ export default {
       })
       // console.log('快速启动数据',result)
       return result
-    }
+    }, 
+    ...mapState(["fullScreen"]),
+  
   },
   created() {
     this.touch = {y:0}
@@ -244,5 +248,8 @@ export default {
       }
     }
   }
+}
+.afterPlay{
+  bottom: 60px;
 }
 </style>

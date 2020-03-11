@@ -4,7 +4,7 @@
     <div class="big" v-if="fullScreen">
       <!-- 头部 -->
       <div class="top">
-        <span @click="changeScreen(false)" class="toggle">▼</span>
+        <span @click="changeScreen(false)" class="toggle mui-icon iconfont icon-wei-"></span>
         {{currentSong.songname}}
       </div>
       <!-- 背景 -->
@@ -19,11 +19,16 @@
       </div>
         <!-- 播放器 -->
         <div class="bar">
-        <button @click="changeloop">{{loops[loop]}}</button>
-        <button @click="prev">上一曲</button>
-        <button @click="togglePlay">{{play?'暂停':'播放'}}</button>
-        <button @click="next">下一曲</button>
-        <button @click="storeUp">{{store[storeIndex]}}</button>
+        <i @click="changeloop" 
+        :class="loop==0?'mui-icon iconfont icon-buxunhuanbofang-'
+        :loop==1?'mui-icon iconfont icon-danquxunhuan'
+        :loop==2?'mui-icon iconfont icon-liebiaoxunhuan'
+        :'mui-icon icon-suijixunhuan'
+        "></i>
+        <i @click="prev" class="mui-icon iconfont icon-shangyishou"></i>
+        <i @click="togglePlay" :class="play?'mui-icon iconfont icon-weibiaoti--':'mui-icon iconfont icon-weibiaoti--1'"></i>
+        <i @click="next" class="mui-icon iconfont icon-xiayishou"></i>
+        <i @click="isStore" :class="store!==-1?'mui-icon iconfont icon-icon red':'mui-icon iconfont icon-ziyuan'"></i>
         </div>
     </div>
     <!-- 小屏播放器 -->
@@ -38,10 +43,10 @@
         </div>
       </div>
       <div class="right_box">
-        <i :class="play?'mui-icon iconfont icon-bofangqi-zanting_':'mui-icon iconfont icon-bofangqi3l'"
+        <i :class="play?'mui-icon iconfont icon-weibiaoti--':'mui-icon iconfont icon-weibiaoti--1'"
         @click.stop="togglePlay"
         ></i>
-        <i class="mui-icon iconfont icon-yinleliebiao"></i>
+        <i class="mui-icon iconfont mui-icon-bars" @click.stop="playList(true)"></i>
       </div>
 
     </div>
@@ -69,33 +74,58 @@
 </template>
 
 <script>
+// vuex
 import { mapState, mapMutations, mapGetters } from "vuex";
 // 进度条组件
 import Myprogress from '../Grogress/index'
 // 歌词
 import Lyric from '../Lyric/index'
+// 收藏歌曲
+import {addCollect} from '../../api/collect'
 export default {
   components:{Myprogress,Lyric},
   data() {
     return {
-      store:['收藏','已收藏'],
       storeIndex:1,
       startTime:0,
       endTime:0,
-      loops:['不循环','单曲','列表','随机'],
       play: false,
-      seekTime:0
+      seekTime:0,
+      store:-1,
+
     };
   },
   computed: {
-    ...mapState(["songList", "fullScreen",'loop']),
+    ...mapState(["songList", "fullScreen",'loop','closeList']),
     ...mapGetters(["currentSong"]),
     cd(){
         return this.play?'cd':'cd paused'
     }
   },
+  created(){
+
+  },
   methods: {
-    ...mapMutations(["changeScreen", "nextCurrendIndex",'changeloop','prevCurrendIndex','changeCurrendIndex']),
+    ...mapMutations(["changeScreen",
+     "nextCurrendIndex",
+     'changeloop',
+     'prevCurrendIndex',
+     'changeCurrendIndex',
+     'togglePlay',
+     'playList',]),
+    //  检测是否收藏
+     isCollect(){
+      //  从本地存储获取收藏数据
+        let collectList = JSON.parse(localStorage.getItem('collect'))
+      //  因为对象的比较是引用地址的比较 所以转换为json格式进行比较
+        let currentSong = this.currentSong.songmid
+      //  如果当前歌曲在本地存储中不存在 那么就返回-1
+        if(!collectList){
+          this.store = -1
+        }else{
+          this.store = collectList.indexOf(currentSong)
+        }
+     },
     // 播放完毕触发的事件
     ended(){
       // console.log('播放完毕');
@@ -129,13 +159,10 @@ export default {
       this.startTime = e.target.currentTime
       // console.log(this.startTime);
     },
-    // 点击收藏
-    storeUp(){
-      if(this.storeIndex==0){
-        this.storeIndex = 1
-      }else{
-        this.storeIndex = 0
-      }
+    // 点击收藏或者取消收藏
+    isStore(){
+      addCollect(this.currentSong)
+      this.isCollect()
     },
     togglePlay(){
         this.play = !this.play
@@ -156,10 +183,12 @@ export default {
     next(){
         // 下一曲
         this.nextCurrendIndex()
+        this.isCollect()
     },
     prev(){
       // 上一曲
       this.prevCurrendIndex()
+      this.isCollect()
     },
     seek(s){
       // 如果不是播放状态 就不播放
@@ -168,10 +197,13 @@ export default {
       this.audio.currentTime = s
       // 更改歌词的时间
       this.seekTime = s
-    }
+    },
   },
   watch:{
       play(newValue,oldValue){
+          if(newValue==true){
+            this.isCollect()
+          }
         // 播放状态 
           if(!this.audio) return false
           if(newValue){
@@ -179,6 +211,11 @@ export default {
           }else{
               this.audio.pause()
           }
+      },
+      fullScreen(newValue,oldValue){
+        if(newValue){
+          this.isCollect()
+        }
       }
   }
 };
@@ -202,9 +239,9 @@ export default {
       text-align: center;
       .toggle {
         color: @fs-color;
-        font-size: 30px;
+        font-size: 32px;
         position: absolute;
-        top: 0px;
+        top: 5px;
         left: 15px;
       }
     }
@@ -247,23 +284,28 @@ export default {
     .bar{
       .w(375);
       height: 40px;
-      // background: @fs-color;
       position: absolute;
       bottom: 55px;
       display: flex;
       align-items: center;
       justify-content: center;
-      button{
+      i{
         width: 15%;
         height: 100%;
-        border: 2px solid @fs-color;
-        border-radius: 50%;
-        font-size: @fs-xs;
-        background: none;
-        outline: none;
-
+        font-size: 35px;
         color: @fs-color;
-        margin:0 5px;
+        // margin:0 5px;
+      }
+        i:nth-child(1){
+          margin-left: 13px;
+        }
+        i:nth-child(5){
+        margin-top: 8px;
+        font-size: 30px;
+        // color: red;
+      }
+        .red{
+         color:#d93f30;;
       }
     }
   }
@@ -330,9 +372,13 @@ export default {
         font-size: 32px;
         color: rgba(255,205,49,.5);
         margin-right:15px;
-        
         // background: #eeeeee;
       }
+      i:nth-child(2){
+        margin-bottom: 5px;
+      }
+
+
     }
   }
    @keyframes rotate {
@@ -343,5 +389,7 @@ export default {
               transform: rotate(360deg)
           }
       }
+    
+      
 }
 </style>
