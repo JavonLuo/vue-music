@@ -74,6 +74,7 @@
 </template>
 
 <script>
+
 // vuex
 import { mapState, mapMutations, mapGetters } from "vuex";
 // 进度条组件
@@ -118,12 +119,22 @@ export default {
       //  从本地存储获取收藏数据
         let collectList = JSON.parse(localStorage.getItem('collect'))
       //  因为对象的比较是引用地址的比较 所以转换为json格式进行比较
-        let currentSong = this.currentSong.songmid
+        let currentSongMid = this.currentSong.songmid
       //  如果当前歌曲在本地存储中不存在 那么就返回-1
-        if(!collectList){
+        if(!collectList || !collectList.length){
           this.store = -1
         }else{
-          this.store = collectList.indexOf(currentSong)
+          let flag = false  //监听器 变为true 说明已经收藏有了
+          collectList.forEach((item,index)=>{
+            if(item.songmid==currentSongMid){
+              flag = true
+            }
+          })
+          if(flag){
+              this.store = 1   //代表收藏
+          }else{
+            this.store = -1    //没有收藏
+          }
         }
      },
     // 播放完毕触发的事件
@@ -184,11 +195,13 @@ export default {
         // 下一曲
         this.nextCurrendIndex()
         this.isCollect()
+        // recentPlay(this.currentSong)
     },
     prev(){
       // 上一曲
       this.prevCurrendIndex()
       this.isCollect()
+      // recentPlay(this.currentSong)
     },
     seek(s){
       // 如果不是播放状态 就不播放

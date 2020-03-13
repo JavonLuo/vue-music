@@ -6,6 +6,7 @@ import search from '../components/Search/index';
 import rank from '../components/Rank/index';
 import songListDetail from '../components/Detail/SongList.vue'
 import rankSongList from '../components/Detail/RankSongList.vue'
+import user from '../components/User/index.vue'
 
 // 使用路由
 Vue.use(VueRouter)
@@ -44,6 +45,10 @@ const router = new VueRouter({
         {
             path:'/',
             redirect:'/recommend'
+        },
+        {
+            path:'/user',
+            component:user
         }
     ]
 })

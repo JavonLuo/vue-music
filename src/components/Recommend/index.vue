@@ -9,7 +9,7 @@
         <div class="title">热门歌单推荐</div>
         <li v-for="(item,index) in recommendList" 
         :key="index" class="list"
-        @click="openDetail">
+        @click="openRecommend">
           <div class="leftImg">
             <img v-lazy="item.imgurl" alt />
           </div>
@@ -38,9 +38,9 @@ import { getBanner, getRecommend } from "../../api/api.js";
 import { get } from "http";
 export default {
   methods:{
-    openDetail(){
+    openRecommend(){
       Toast({
-    message: '数据加载失败...',
+    message: '数据加载失败,请访问其他页面...',
     position: 'center',
     duration: 1500
   })

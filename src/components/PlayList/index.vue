@@ -71,18 +71,30 @@ export default {
     //  从本地存储获取收藏数据
         let collectList = JSON.parse(localStorage.getItem('collect'))
     //  如果当前歌曲在本地存储中不存在 那么就返回-1
-        if(!collectList){
+        if(!collectList || !collectList.length){
             for (let index = 0; index < this.songList.length; index++) {
                 // vue中数组响应式变化 用this.$set(this.arrList, 0, 10)
                 this.$set(this.store, index, -1);
                 }
         }else{
-            for (let index = 0; index < this.songList.length; index++) {
-                //  取出播放列表的songmid
-                let currentSong = this.songList[index].songmid
-                // vue中数组响应式变化 用this.$set(this.arrList, 0, 10)
-                this.$set(this.store, index, collectList.indexOf(currentSong));
-                }
+          let flag = false  //程序监听器
+          let currentSongMid  //当前歌的mid
+          for (let index = 0; index < this.songList.length; index++) {
+              //  取出播放列表的songmid
+              currentSongMid = this.songList[index].songmid
+              collectList.forEach((item,index)=>{
+                    if(item.songmid == currentSongMid){
+                      flag = true
+                    }
+              })
+              // vue中数组响应式变化 用this.$set(this.arrList, 0, 10)
+              if(flag){
+                this.$set(this.store, index, 1)
+                flag = false
+              }else{
+                this.$set(this.store, index, -1)
+              }
+              }
         }
      },
     initBs(){

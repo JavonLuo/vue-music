@@ -1,23 +1,20 @@
 <template>
   <div class="header" @click="flag=false">
     <span class="mui-icon mui-icon-bars" @click.stop="setting"></span>
+
     <!-- 如果图片在根目录下 可以直接用根目录路径 -->
     <img src="/logo.png" alt />
     <span>JaFeng Music</span>
-    <span class="mui-icon mui-icon-contact"></span>
-    <transition
-      enter-active-class="animated slideInRight"
-      leave-active-class="animated slideOutRight"
-    >
-      <offcanvas v-if="flag"></offcanvas>
-    </transition>
+      <router-link to="/user" tag="div" active-class="sel">
+        <span class="mui-icon mui-icon-contact"></span>
+      </router-link>
   </div>
 </template>
 
 
 <script>
 // mint-ui
-import {Toast} from 'mint-ui'
+import { Toast } from "mint-ui";
 // import offcanvas from "../Offcanvas/index";
 export default {
   // components: { offcanvas },
@@ -28,11 +25,11 @@ export default {
   },
   methods: {
     setting() {
-    Toast({
-        message: '功能正在开发中敬请期待...',
-        position: 'center',
+      Toast({
+        message: "功能正在开发中敬请期待...",
+        position: "center",
         duration: 1500
-      })
+      });
     },
     close() {}
   }
@@ -64,7 +61,6 @@ export default {
   .mui-icon-bars {
     left: 16px;
     top: 10px;
-
   }
   .mui-icon-contact {
     right: 16px;

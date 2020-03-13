@@ -1,6 +1,8 @@
 // 创建一个状态管理
 import Vue from 'vue'
 import Vuex from 'vuex'
+import recentPlay from '../api/recentPlay'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -60,6 +62,8 @@ const store = new Vuex.Store({
     },
     getters:{
         currentSong(state){
+            // 添加最近播放列表
+            recentPlay(state.songList[state.currentIndex])
             // 当前放的哪一首歌
             return state.songList[state.currentIndex] || null;
         },

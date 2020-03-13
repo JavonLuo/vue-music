@@ -17,11 +17,21 @@
           </ul>
         </div>
       </div>
+      <!-- 热搜区 -->
+      <div class="hot_key" v-if="!songlist.length">
+        <h1>热门搜索</h1>
+        <ul>
+          <li v-for="(item,index) in HotSearch" 
+          :key="index" @click="hotKwSearch(index)">{{item}}</li>
+
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import HotSearch from '../../api/hotSearch.js'
 // 引入vuex
 import {mapMutations} from 'vuex'
 // 搜素  获取歌曲播放地址
@@ -29,17 +39,31 @@ import {getSearchSong,getSongUrlByMid} from '../../api/api'
 export default {
   data(){
     return{
-      songlist:[]
+      songlist:[],
+      HotSearch:[]
     }
   },
   methods:{
+    // 搜索框搜索
     searchGoods(e){
       // console.log(e.keyCode)
       if(e.keyCode == 13){
         // console.log(this.$refs.input.value)
-        this.filterData()
+        let kw = this.$refs.input.value
+        this.filterData(kw)
         }
       },
+    // 热词搜索
+    hotKwSearch(index){
+        let kw = this.HotSearch[index]
+        this.filterData(kw)
+    },
+    getHotSearch(){
+    let HotSearch = JSON.parse(localStorage.getItem('hotSearch'))
+    if(HotSearch){
+      this.HotSearch = HotSearch
+    }
+    },
     handleData(data) {
       let result = [];
       let mids = [];
@@ -70,8 +94,11 @@ export default {
       });
       return { result, mids };
     },
-  async filterData(){
-        let kw = this.$refs.input.value
+  async filterData(kw){
+        // 放入热搜区
+         HotSearch(kw)
+        // 更新数据
+        this.getHotSearch()
     try{
        let res = await getSearchSong(kw)
        let {result,mids} = this.handleData(res.data)
@@ -104,6 +131,7 @@ export default {
   },
 
   created(){
+    this.getHotSearch()
   }
 };
 </script>

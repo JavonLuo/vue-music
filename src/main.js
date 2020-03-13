@@ -20,6 +20,9 @@ Vue.component(Button.name, Button)
 Vue.component(Cell.name, Cell)
 Vue.component(Toast.name,Toast)
 Vue.component(CellSwipe.name, CellSwipe);
+
+
+
 Vue.use(VueLazyload)
 // or with options
 Vue.use(VueLazyload, {
