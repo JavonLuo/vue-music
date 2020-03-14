@@ -28,8 +28,6 @@
 </template>
 
 <script>
-// 过滤数据方法
-// import filterData from "../Detail/filterRankSongList"
 // 获取数据
 import { getRankSongList } from "../../api/api"
 // 获取歌曲播放地址
