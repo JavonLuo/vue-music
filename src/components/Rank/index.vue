@@ -63,9 +63,8 @@ export default {
         this.$nextTick(()=>{
           this.initBS()
         })
-
-
     })
+    .catch(err=>{throw err})
   }
 };
 </script>

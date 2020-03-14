@@ -75,7 +75,7 @@ export default {
       });
 // 初始化滚动
     let wrapper = this.$refs.wrapper;
-    new BS(wrapper);
+    new BS(wrapper, { probeType: 3 , click:true});
   }
 };
 </script>
